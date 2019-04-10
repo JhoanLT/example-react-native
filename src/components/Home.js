@@ -9,7 +9,7 @@ import {
   View,
   TabHeading
 } from 'native-base';
-import {StyleSheet, Image} from 'react-native';
+import {StyleSheet, Image, PanResponder} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { WebView } from 'react-native-webview'
 
@@ -20,13 +20,14 @@ const styles = StyleSheet.create({
 });
 
 export default class Home extends Component {
+
   render() {
     return (
       <Container>
         <Header hasTabs/>
         <Tabs renderTabBar={()=> <ScrollableTab 
         style={{ backgroundColor: "white", height : 150}} 
-        onScroll={(param)=> console.table("Here")}
+        onScroll={(param)=> console.log(param.nativeEvent)}
         />}>                  
           <Tab heading={ 
               <TabHeading style={{ backgroundColor: "white", margin: 12 }}>
@@ -35,12 +36,12 @@ export default class Home extends Component {
                     alignItems: 'center',
                     width : 340
                   }}
+                  
                   >
                     <Image source={require("../assets/img/cocina.png")} style={{width : 50, height:80}}/>
                     <Text>Limpieza/ Servicio doméstico</Text>
                   </View>
               </TabHeading>}
-              onPress={() => console.log("Here")}
               >
           </Tab>
           <Tab heading={ 
