@@ -3,11 +3,12 @@ import Home from '../components/Home';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import { setName } from '../store/actions';
+import DeckSwiperExample from '../components/DeckSwiperExample';
 
 class HomeScreen extends Component{
     render(){
         return(
-            <Home {...this.props}/>
+            <DeckSwiperExample/>
         )
     }
 }
