@@ -12,6 +12,7 @@ import {
   List,
   ListItem,
 } from 'native-base';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const cards = [
   {
@@ -89,72 +90,122 @@ export default class DeckSwiperExample extends Component {
   constructor(props){
     super(props);
     this.state = {
-      services : []
+      services : [],
+      cards    : []
     }
   }
 
-  stepCategoryService(param){
-    const indexElement = cards.findIndex(card => card.id === param.id);
-    let element        = cards[indexElement+1]
-    if(element === undefined){
-      element = cards[0]
-    }
+  componentDidMount(){
+    this.getFirstService();
+  }
+
+  getFirstService(){
+    let element = cards[0];
     this.setState({
       services : services.filter((service) => service.idService === element.id)
-    });
-};
+    });      
+  }
+
+  stepCategoryService(param){
+    if(param){
+      const indexElement = cards.findIndex(card => card.id === param.id);
+      let element        = cards[indexElement+1];
+      if(element === undefined){
+        element = cards[0];
+      }
+      this.setState({
+        services : services.filter((service) => service.idService === element.id)
+      });
+    }
+  };
 
   render() {
     const {services} = this.state;
     return (
-      <Container>
-        <View style={{flex : 1, margin : 34, marginBottom : 5}}>
-          <DeckSwiper
-            onSwipeRight={(param) => this.stepCategoryService(param)}
-            onSwipeLeft={(param) => this.stepCategoryService(param)}
-            dataSource={cards}
-            renderItem={item =>
-              <Card>
-                <CardItem style={{alignContent : 'center', justifyContent : 'center'}}>
-                  <Image source={item.image} style={{width : 75, height : 80}}/>
-                </CardItem>
-                <CardItem style={{alignContent : 'center', justifyContent : 'center'}}>
-                  <View style={{alignContent : 'center', justifyContent : 'center', marginTop : 8}}>
-                    <Text style={{color : '#64b5f6'}}>{item.name}</Text>
-                  </View>
-                </CardItem>
-              </Card>
-            }
-          />
+      <Container style={{alignItems : 'center'}}>
+        <View style={{flexDirection : 'row', flex : 1, marginTop : 12}}>
+          <Icon 
+            name  = "chevron-left"
+            size  = {20}
+            style = {{
+              marginTop   : 75, 
+              marginRight : 24,
+            }} 
+            onPress={() => {
+              this._deckSwiper._root.swipeLeft();
+              setTimeout(() => {
+                this._deckSwiper._root.props.onSwipeLeft(this._deckSwiper._root.state.selectedItem);
+              }, 200)
+            }}
+            >
+          </Icon>
+          <View style={{width : 220}}>
+            <DeckSwiper
+              ref          = {(c) => this._deckSwiper = c}
+              onSwipeRight = {(param) => this.stepCategoryService(param)}
+              onSwipeLeft  = {(param) => this.stepCategoryService(param)}
+              dataSource   = {cards}
+              renderItem   = {item =>
+                <Card>
+                  <CardItem style={{alignContent : 'center', justifyContent : 'center', height:100}}>
+                    <Image source={item.image} style={{width : "42%", height : "100%"}}/>
+                  </CardItem>
+                  <CardItem style={{alignContent : 'center', justifyContent : 'center'}}>
+                    <View style={{alignContent : 'center', justifyContent : 'center', marginTop : 8}}>
+                      <Text style={{color : '#64b5f6'}}>{item.name}</Text>
+                    </View>
+                  </CardItem>
+                </Card>
+              }
+            />
+          </View>
+          <Icon 
+            name    = 'chevron-right'
+            size    ={20} 
+            style   = {{
+              marginTop  : 75, 
+              marginLeft : 24,
+            }} 
+            onPress = {() => {
+              this._deckSwiper._root.swipeRight(); 
+              setTimeout(() => {
+                this._deckSwiper._root.props.onSwipeRight(this._deckSwiper._root.state.selectedItem);
+              },200)
+            }}
+          >
+          </Icon>
         </View>
-        <View style={{flex : 2, paddingLeft : 46, marginBottom : 5,}}>
+        <View style={{flex : 2, marginBottom : 5, width : '100%', paddingLeft : 72}}>
             <List>
               <ScrollView>
               {services.map((service, key) => (
-            <ListItem avatar key={key}>
-                <Left>
-                  <View style={{
-                    alignContent : 'center',
-                    justifyContent : 'center',
-                    padding : 15, 
-                    borderRadius : 50,
-                    shadowColor: "#000",
-                    shadowOpacity: 0.20,
-                    shadowRadius: 1,
-                    elevation: 2,
-                    }}
-                  >
-                    <Image 
-                      source={service.image} 
-                      style={{width : 35, height : 35}}
-                    />
+                <ListItem avatar key={key}>
+                  <Left>
+                    <View style={{
+                      alignContent : 'center',
+                      justifyContent : 'center',
+                      alignItems : 'center',
+                      padding : 15, 
+                      borderRadius : 50,
+                      shadowColor: "#000",
+                      shadowOpacity: 0.20,
+                      shadowRadius: 1,
+                      elevation: 2,
+                      width : 80,
+                      height : 80
+                      }}
+                    >
+                      <Image 
+                        source={service.image} 
+                        style={{width : 48, height : 48}}
+                      />
+                    </View>
+                  </Left>
+                  <View style={{marginLeft : 8}}>
+                    <Text style={{color : '#64b5f6'}}>{service.name}</Text>
                   </View>
-                </Left>
-                <View style={{marginLeft : 8}}>
-                  <Text style={{color : '#64b5f6'}}>{service.name}</Text>
-                </View>
-              </ListItem>  
-          ))}
+                </ListItem>
+              ))}
               </ScrollView>
             </List>
           </View>
